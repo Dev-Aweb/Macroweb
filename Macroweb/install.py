@@ -7,7 +7,7 @@ def install(package):
 # List your dependencies here
 dependencies = [
     'pyautogui',
-    'autoit',
+    'pyautoit',
     'keyboard',
     'pynput',
     'tk',
