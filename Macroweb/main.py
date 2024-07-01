@@ -100,11 +100,11 @@ def play_keystrokes(file_path, azerty):
                 keyboard_controller.release(key)
 
 def getting_ready(vip, azerty):
-    gw.getWindowsWithTitle('Roblox')[0].activate()
     time.sleep(1)
     autoit.mouse_wheel("up", 100)
-    autoit.mouse_wheel("down", -10)
-    play_keystrokes('Records/GettingReady.txt', azerty)
+    autoit.mouse_wheel("down", 10)
+    file_path = os.path.join(os.getcwd(), 'Records', 'GettingReady.txt')
+    play_keystrokes(file_path, azerty)
     time.sleep(1)
     autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5485), int(pyautogui.size().height * 100 / 258))
 
@@ -114,42 +114,54 @@ def getting_ready(vip, azerty):
     pyautogui.moveTo(pyautogui.size().width / 2, pyautogui.size().height / 2)
     time.sleep(0.25)
     if vip:
-        play_keystrokes('Records/VipCamera.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'VipCamera.txt')
+        play_keystrokes(file_path, azerty)
     else:
-        play_keystrokes('Records/Camera.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'Camera.txt')
+        play_keystrokes(file_path, azerty)
 
 def main_position(vip, azerty):
     if vip:
-        play_keystrokes('Records/VipMainPosition.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'VipMainPosition.txt')
+        play_keystrokes(file_path, azerty)
     else:
-        play_keystrokes('Records/MainPosition.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'MainPosition.txt')
+        play_keystrokes(file_path, azerty)
 
 def loop(vip, azerty):
     if vip:
         main_position(vip, azerty)
-        play_keystrokes('Records/VipHill.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'VipHill.txt')
+        play_keystrokes(file_path, azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        play_keystrokes('Records/VipLeaderboard.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'VipLeaderboard.txt')
+        play_keystrokes(file_path, azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        play_keystrokes('Records/VipHouse.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'VipHouse.txt')
+        play_keystrokes(file_path, azerty)
     else:
         main_position(vip, azerty)
-        play_keystrokes('Records/Hill.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'Hill.txt')
+        play_keystrokes(file_path, azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        play_keystrokes('Records/Leaderboard.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'Leaderboard.txt')
+        play_keystrokes(file_path, azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        play_keystrokes('Records/House.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'House.txt')
+        play_keystrokes(file_path, azerty)
 
 def obby(vip, azerty):
     main_position(vip, azerty)
     if vip:
-        play_keystrokes('Records/VipObby.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'VipObby.txt')
+        play_keystrokes(file_path, azerty)
     else:
-        play_keystrokes('Records/Obby.txt', azerty)
+        file_path = os.path.join(os.getcwd(), 'Records', 'Obby.txt')
+        play_keystrokes(file_path, azerty)
 
 def send_discord_embed(webhook_url, title, description, color, fields=None, image_url=None):
     embed = {
@@ -355,7 +367,9 @@ class App:
     def __init__(self):
         # Window
         self.root = tk.Tk()
-        self.root.geometry("400x500")
+        self.x = str(int(pyautogui.size().width / 4.8))
+        self.y = str(int(pyautogui.size().height / 2.16))
+        self.root.geometry(f"{self.x}x{self.y}")
         self.root.title("Macroweb")
         self.root.resizable(False, False)
 
@@ -431,36 +445,60 @@ class App:
     def on_closing(self):
         if messagebox.askyesno(title="Quit?", message="Do you really want to quit?"):
             self.root.destroy()
+            quit()
 
     def start_func(self):
-        if self.settings['start']:
-            return
-        self.settings['start'] = True
+        try:
+            if self.settings['start']:
+                return
+            self.settings['start'] = True
 
-        self.macro['doObby'] = self.isObby.get()
-        self.macro['obbyEvery'] = self.every.get()
+            # Macro values type checks
+            self.macro['doObby'] = int(self.isObby.get()) if isinstance(self.isObby.get(), int) else 0
+            self.macro['obbyEvery'] = int(self.every.get()) if isinstance(self.every.get(), int) else 0
 
-        self.webhook['enableWebhook'] = self.isWebhook.get()
-        self.webhook['webhookUrl'] = self.webhookLink.get()
-        self.webhook['userId'] = self.userid.get()
-        self.webhook['screenshotInventory'] = self.isInventory.get()
-        self.webhook['inventoryEvery'] = self.isInventory.get()
-        self.webhook['sendMin'] = self.minAura.get()
-        self.webhook['pingMin'] = self.pingMinAura.get()
-        self.webhook['auraImage'] = self.sendAuraImages.get()
+            # Webhook values type checks
+            self.webhook['enableWebhook'] = int(self.isWebhook.get()) if isinstance(self.isWebhook.get(), int) else 0
+            self.webhook['webhookUrl'] = str(self.webhookLink.get()) if isinstance(self.webhookLink.get(), str) else ""
+            self.webhook['userId'] = str(self.userid.get()) if isinstance(self.userid.get(), str) else ""
+            self.webhook['screenshotInventory'] = int(self.isInventory.get()) if isinstance(self.isInventory.get(),
+                                                                                            int) else 0
+            self.webhook['inventoryEvery'] = int(self.isInventory.get()) if isinstance(self.isInventory.get(),
+                                                                                       int) else 0
+            self.webhook['sendMin'] = int(self.minAura.get()) if isinstance(self.minAura.get(), int) else 0
+            self.webhook['pingMin'] = int(self.pingMinAura.get()) if isinstance(self.pingMinAura.get(), int) else 0
+            self.webhook['auraImage'] = int(self.sendAuraImages.get()) if isinstance(self.sendAuraImages.get(),
+                                                                                     int) else 0
 
-        self.settings['gamepass'] = self.isVip.get()
-        self.settings['azerty'] = self.isAzerty.get()
+            # Settings values type checks
+            self.settings['gamepass'] = int(self.isVip.get()) if isinstance(self.isVip.get(), int) else 1
+            self.settings['azerty'] = int(self.isAzerty.get()) if isinstance(self.isAzerty.get(), int) else 0
 
-        print(self.settings['azerty'], self.isAzerty.get())
-        print("starting")
+            print(self.settings['azerty'], self.isAzerty.get())
+            print("starting")
 
-        self.macroProcess = mp.Process(target=macro_process, args=(self.macro, self.webhook, self.settings))
-        self.macroProcess.start()
-        keyboard.add_hotkey('F3', self.end_func)
-        if bool(self.webhook['enableWebhook']):
-            self.detectionProcess = mp.Process(target=detection_check, args=(self.webhook, ))
-            self.detectionProcess.start()
+            try:
+                gw.getWindowsWithTitle('Roblox')[0].activate()
+            except Exception:
+                self.settings['start'] = False
+                return
+
+            # Start the macro process
+            self.macroProcess = mp.Process(target=macro_process, args=(self.macro, self.webhook, self.settings))
+            self.macroProcess.start()
+
+            # Add hotkey for ending the process
+            keyboard.add_hotkey('F3', self.end_func)
+
+            # Start the detection process if the webhook is enabled
+            if bool(self.webhook['enableWebhook']):
+                self.detectionProcess = mp.Process(target=detection_check, args=(self.webhook,))
+                self.detectionProcess.start()
+
+        except Exception as e:
+            # Print an error message and stop the execution
+            print(f"An error occurred: {e}")
+            self.settings['start'] = False
 
     def end_func(self):
         if not self.settings['start']: return
@@ -472,8 +510,6 @@ class App:
             self.detectionProcess.join()
 
         gw.getWindowsWithTitle('Macroweb')[0].activate()
-
-        quit()
 
     def make_window_always_on_top(self, root):
         # Get the window ID
