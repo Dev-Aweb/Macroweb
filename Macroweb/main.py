@@ -19,7 +19,7 @@ import webbrowser as wb
 from configparser import ConfigParser
 import os
 
-import winsound
+#import winsound
 import time
 
 special_keys = {
@@ -295,7 +295,7 @@ def detect_aura(webhook):
 
         # Check if the closest match is within the tolerance
         if top_auras[0][1] <= COLOR_TOLERANCE:
-            winsound.Beep(1000, 100)
+            #winsound.Beep(1000, 100)
             print(f"Detected Aura: {top_auras[0][0]} (Distance: {top_auras[0][1]}, Rarity: {top_auras[0][2]})")
             inv = pyautogui.screenshot(region=(0, 0, pyautogui.size().width, pyautogui.size().height))
             inv.save(filename)
@@ -316,7 +316,7 @@ def detect_aura(webhook):
             if top_auras[0][2] > webhook['sendMin']:
                 send_discord_embed(webhook['webhookUrl'], title, description, color, None, image_url)
         else:
-            winsound.Beep(500, 500)
+            #winsound.Beep(500, 500)
             print("No matching aura found within tolerance")
             print(f"Closest guess: {top_auras[0][0]} (Distance: {top_auras[0][1]})")
     else:
