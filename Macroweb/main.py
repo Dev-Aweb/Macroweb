@@ -93,6 +93,7 @@ def play_keystrokes(file_path, azerty):
             lines = f.readlines()
     except FileNotFoundError:
         print(f"File not found: {file_path}")
+        print(f"Current working directory: {os.getcwd()}")
         print(f"Directory contents: {os.listdir(script_dir)}")
         return
 
