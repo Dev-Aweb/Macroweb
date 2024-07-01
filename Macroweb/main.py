@@ -103,65 +103,52 @@ def getting_ready(vip, azerty):
     time.sleep(1)
     autoit.mouse_wheel("up", 100)
     autoit.mouse_wheel("down", 10)
-    file_path = os.path.join(os.getcwd(), 'Records', 'GettingReady.txt')
-    play_keystrokes(file_path, azerty)
+    play_keystrokes('../Records/GettingReady.txt', azerty)
     time.sleep(1)
     autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5485), int(pyautogui.size().height * 100 / 258))
-
     time.sleep(0.25)
     autoit.mouse_click("left", int(pyautogui.size().width * 100 / 711), int(pyautogui.size().height * 100 / 864))
     time.sleep(0.25)
     pyautogui.moveTo(pyautogui.size().width / 2, pyautogui.size().height / 2)
     time.sleep(0.25)
     if vip:
-        file_path = os.path.join(os.getcwd(), 'Records', 'VipCamera.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/VipCamera.txt', azerty)
     else:
-        file_path = os.path.join(os.getcwd(), 'Records', 'Camera.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/Camera.txt', azerty)
 
 def main_position(vip, azerty):
     if vip:
-        file_path = os.path.join(os.getcwd(), 'Records', 'VipMainPosition.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/VipMainPosition.txt', azerty)
     else:
-        file_path = os.path.join(os.getcwd(), 'Records', 'MainPosition.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/MainPosition.txt', azerty)
 
 def loop(vip, azerty):
     if vip:
         main_position(vip, azerty)
-        file_path = os.path.join(os.getcwd(), 'Records', 'VipHill.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/VipHill.txt', azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        file_path = os.path.join(os.getcwd(), 'Records', 'VipLeaderboard.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/VipLeaderboard.txt', azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        file_path = os.path.join(os.getcwd(), 'Records', 'VipHouse.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/VipHouse.txt', azerty)
     else:
         main_position(vip, azerty)
-        file_path = os.path.join(os.getcwd(), 'Records', 'Hill.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/Hill.txt', azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        file_path = os.path.join(os.getcwd(), 'Records', 'Leaderboard.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/Leaderboard.txt', azerty)
         time.sleep(1)
         main_position(vip, azerty)
-        file_path = os.path.join(os.getcwd(), 'Records', 'House.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/House.txt', azerty)
+
 
 def obby(vip, azerty):
     main_position(vip, azerty)
     if vip:
-        file_path = os.path.join(os.getcwd(), 'Records', 'VipObby.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/VipObby.txt', azerty)
     else:
-        file_path = os.path.join(os.getcwd(), 'Records', 'Obby.txt')
-        play_keystrokes(file_path, azerty)
+        play_keystrokes('../Records/Obby.txt', azerty)
 
 def send_discord_embed(webhook_url, title, description, color, fields=None, image_url=None):
     embed = {
