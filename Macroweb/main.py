@@ -73,20 +73,37 @@ azerty_to_qwerty = {
 
 keyboard_controller = Controller()
 
+import os
+import time
+import pyautogui
+from pynput.keyboard import Controller, Key
+import autoit
+
+# Assuming special_keys is defined somewhere in your script
+special_keys = {'enter': Key.enter, 'space': Key.space}
+keyboard_controller = Controller()
+
+
 def play_keystrokes(file_path, azerty):
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
+    try:
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Directory contents: {os.listdir(os.getcwd())}")
+        return
 
     for line in lines:
         key, event_type, delay = line.strip().split()
         delay = float(delay)
         time.sleep(delay)
 
-        print(azerty)
-
         if azerty == 0:
-            if key == 'a': key = 'q'
-            elif key == 'z': key = 'w'
+            if key == 'a':
+                key = 'q'
+            elif key == 'z':
+                key = 'w'
 
         if event_type == 'down':
             if key in special_keys:
@@ -99,12 +116,15 @@ def play_keystrokes(file_path, azerty):
             else:
                 keyboard_controller.release(key)
 
+
 def getting_ready(vip, azerty):
+    # Set the working directory to the script's directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(base_dir)
+
     time.sleep(1)
     autoit.mouse_wheel("up", 100)
     autoit.mouse_wheel("down", 10)
-    print(f"File not found")
-    # Debug: Print the current working directory and list its contents
     print(f"Current working directory: {os.getcwd()}")
     print(f"Directory contents: {os.listdir(os.getcwd())}")
     play_keystrokes('Records/GettingReady.txt', azerty)
@@ -120,13 +140,23 @@ def getting_ready(vip, azerty):
     else:
         play_keystrokes('Records/Camera.txt', azerty)
 
+
 def main_position(vip, azerty):
+    # Set the working directory to the script's directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(base_dir)
+
     if vip:
         play_keystrokes('Records/VipMainPosition.txt', azerty)
     else:
         play_keystrokes('Records/MainPosition.txt', azerty)
 
+
 def loop(vip, azerty):
+    # Set the working directory to the script's directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(base_dir)
+
     if vip:
         main_position(vip, azerty)
         play_keystrokes('Records/VipHill.txt', azerty)
@@ -148,6 +178,10 @@ def loop(vip, azerty):
 
 
 def obby(vip, azerty):
+    # Set the working directory to the script's directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(base_dir)
+
     main_position(vip, azerty)
     if vip:
         play_keystrokes('Records/VipObby.txt', azerty)
