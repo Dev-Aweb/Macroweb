@@ -73,28 +73,15 @@ azerty_to_qwerty = {
 
 keyboard_controller = Controller()
 
-import os
-import time
-import pyautogui
-from pynput.keyboard import Controller, Key
-import autoit
-
-# Assuming special_keys is defined somewhere in your script
-special_keys = {'enter': Key.enter, 'space': Key.space}
-keyboard_controller = Controller()
-
-
+base_dir = os.path.dirname(os.path.abspath(__file__))
 def play_keystrokes(file_path, azerty):
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, file_path)
-
     try:
-        with open(file_path, 'r') as f:
+        full_path = os.path.join(base_dir, file_path)
+        with open(full_path, 'r') as f:
             lines = f.readlines()
     except FileNotFoundError:
-        print(f"File not found: {file_path}")
-        print(f"Current working directory: {os.getcwd()}")
-        print(f"Directory contents: {os.listdir(script_dir)}")
+        print(f"File not found: {full_path}")
+        print(f"Directory contents: {os.listdir(base_dir)}")
         return
 
     for line in lines:
@@ -102,11 +89,11 @@ def play_keystrokes(file_path, azerty):
         delay = float(delay)
         time.sleep(delay)
 
+        print(azerty)
+
         if azerty == 0:
-            if key == 'a':
-                key = 'q'
-            elif key == 'z':
-                key = 'w'
+            if key == 'a': key = 'q'
+            elif key == 'z': key = 'w'
 
         if event_type == 'down':
             if key in special_keys:
@@ -506,11 +493,11 @@ class App:
             print(self.settings['azerty'], self.isAzerty.get())
             print("starting")
 
-            """try:
+            try:
                 gw.getWindowsWithTitle('Roblox')[0].activate()
             except Exception:
                 self.settings['start'] = False
-                return"""
+                return
 
             # Start the macro process
             self.macroProcess = mp.Process(target=macro_process, args=(self.macro, self.webhook, self.settings))
