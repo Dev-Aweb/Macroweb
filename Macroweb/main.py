@@ -493,11 +493,11 @@ class App:
             print(self.settings['azerty'], self.isAzerty.get())
             print("starting")
 
-            try:
+            """try:
                 gw.getWindowsWithTitle('Roblox')[0].activate()
             except Exception:
                 self.settings['start'] = False
-                return
+                return"""
 
             # Start the macro process
             self.macroProcess = mp.Process(target=macro_process, args=(self.macro, self.webhook, self.settings))
