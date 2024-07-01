@@ -85,13 +85,15 @@ keyboard_controller = Controller()
 
 
 def play_keystrokes(file_path, azerty):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, file_path)
+
     try:
         with open(file_path, 'r') as f:
             lines = f.readlines()
     except FileNotFoundError:
         print(f"File not found: {file_path}")
-        print(f"Current working directory: {os.getcwd()}")
-        print(f"Directory contents: {os.listdir(os.getcwd())}")
+        print(f"Directory contents: {os.listdir(script_dir)}")
         return
 
     for line in lines:
@@ -116,22 +118,14 @@ def play_keystrokes(file_path, azerty):
             else:
                 keyboard_controller.release(key)
 
-
 def getting_ready(vip, azerty):
-    # Set the working directory to the script's directory
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(base_dir)
-
+    play_keystrokes('Records/GettingReady.txt', azerty)
     time.sleep(1)
     autoit.mouse_wheel("up", 100)
     autoit.mouse_wheel("down", 10)
-    print(f"Current working directory: {os.getcwd()}")
-    print(f"Directory contents: {os.listdir(os.getcwd())}")
-    play_keystrokes('Records/GettingReady.txt', azerty)
-    time.sleep(1)
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5485), int(pyautogui.size().height * 100 / 258))
+    pyautogui.click(int(pyautogui.size().width * 100 / 5485), int(pyautogui.size().height * 100 / 258), duration=10)
     time.sleep(0.25)
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 711), int(pyautogui.size().height * 100 / 864))
+    pyautogui.click(int(pyautogui.size().width * 100 / 711), int(pyautogui.size().height * 100 / 864), duration=10)
     time.sleep(0.25)
     pyautogui.moveTo(pyautogui.size().width / 2, pyautogui.size().height / 2)
     time.sleep(0.25)
@@ -140,23 +134,13 @@ def getting_ready(vip, azerty):
     else:
         play_keystrokes('Records/Camera.txt', azerty)
 
-
 def main_position(vip, azerty):
-    # Set the working directory to the script's directory
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(base_dir)
-
     if vip:
         play_keystrokes('Records/VipMainPosition.txt', azerty)
     else:
         play_keystrokes('Records/MainPosition.txt', azerty)
 
-
 def loop(vip, azerty):
-    # Set the working directory to the script's directory
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(base_dir)
-
     if vip:
         main_position(vip, azerty)
         play_keystrokes('Records/VipHill.txt', azerty)
@@ -176,17 +160,36 @@ def loop(vip, azerty):
         main_position(vip, azerty)
         play_keystrokes('Records/House.txt', azerty)
 
-
 def obby(vip, azerty):
-    # Set the working directory to the script's directory
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(base_dir)
-
     main_position(vip, azerty)
     if vip:
         play_keystrokes('Records/VipObby.txt', azerty)
     else:
         play_keystrokes('Records/Obby.txt', azerty)
+
+def craft_coins(vip, azerty):
+    main_position(vip, azerty)
+    if vip:
+        play_keystrokes('Records/VipCraftGlidedCoins.txt', azerty)
+    else:
+        play_keystrokes('Records/CraftGlidedCoins.txt', azerty)
+    time.sleep(5)
+    pyautogui.click(int(pyautogui.size().width * 100 / 324), int(pyautogui.size().height * 100 / 118), duration=10)
+    time.sleep(0.25)
+    pyautogui.click(int(pyautogui.size().width * 100 / 573), int(pyautogui.size().height * 100 / 250), duration=10)
+    pyautogui.scroll(25)
+    pyautogui.scroll(25)
+    time.sleep(0.25)
+    pyautogui.click(int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 166), duration=10)
+    time.sleep(0.25)
+    for i in range(5):
+        pyautogui.click(int(pyautogui.size().width * 100 / 161), int(pyautogui.size().height * 100 / 250), duration=10)
+        time.sleep(0.25)
+        pyautogui.click(int(pyautogui.size().width * 100 / 235), int(pyautogui.size().height * 100 / 156), duration=10)
+        time.sleep(0.25)
+    pyautogui.click(int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 1687), duration=10)
+    time.sleep(0.25)
+    play_keystrokes('Records/Reset.txt', azerty)
 
 def send_discord_embed(webhook_url, title, description, color, fields=None, image_url=None):
     embed = {
