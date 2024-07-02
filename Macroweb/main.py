@@ -105,13 +105,13 @@ def play_keystrokes(file_path, azerty):
                 keyboard_controller.release(key)
 
 def getting_ready(vip, azerty):
-    play_keystrokes('Records/GettingReady.txt', azerty)
-    time.sleep(1)
     autoit.mouse_wheel("up", 100)
     autoit.mouse_wheel("down", 10)
-    pyautogui.click(int(pyautogui.size().width * 100 / 5485), int(pyautogui.size().height * 100 / 258), duration=1)
+    play_keystrokes('Records/GettingReady.txt', azerty)
+    time.sleep(1)
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5485), int(pyautogui.size().height * 100 / 258))
     time.sleep(0.25)
-    pyautogui.click(int(pyautogui.size().width * 100 / 711), int(pyautogui.size().height * 100 / 864), duration=1)
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 711), int(pyautogui.size().height * 100 / 864))
     time.sleep(0.25)
     pyautogui.moveTo(pyautogui.size().width / 2, pyautogui.size().height / 2)
     time.sleep(0.25)
@@ -160,20 +160,20 @@ def craft_coins(vip, azerty):
     else:
         play_keystrokes('Records/CraftGlidedCoins.txt', azerty)
     time.sleep(5)
-    pyautogui.click(int(pyautogui.size().width * 100 / 324), int(pyautogui.size().height * 100 / 118), duration=1)
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 324), int(pyautogui.size().height * 100 / 118))
     time.sleep(0.25)
-    pyautogui.click(int(pyautogui.size().width * 100 / 573), int(pyautogui.size().height * 100 / 250), duration=1)
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 573), int(pyautogui.size().height * 100 / 250))
     pyautogui.scroll(25)
     pyautogui.scroll(25)
     time.sleep(0.25)
-    pyautogui.click(int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 166), duration=1)
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 166))
     time.sleep(0.25)
     for i in range(5):
-        pyautogui.click(int(pyautogui.size().width * 100 / 161), int(pyautogui.size().height * 100 / 250), duration=1)
+        autoit.mouse_click("left", int(pyautogui.size().width * 100 / 161), int(pyautogui.size().height * 100 / 250))
         time.sleep(0.25)
-        pyautogui.click(int(pyautogui.size().width * 100 / 235), int(pyautogui.size().height * 100 / 156), duration=1)
+        autoit.mouse_click("left", int(pyautogui.size().width * 100 / 235), int(pyautogui.size().height * 100 / 156))
         time.sleep(0.25)
-    pyautogui.click(int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 1687), duration=1)
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 1687))
     time.sleep(0.25)
     play_keystrokes('Records/Reset.txt', azerty)
 
@@ -381,11 +381,8 @@ class App:
     def __init__(self):
         # Window
         self.root = tk.Tk()
-        self.x = str(int(pyautogui.size().width / 4.8))
-        self.y = str(int(pyautogui.size().height / 2.16))
-        self.root.geometry(f"{self.x}x{self.y}")
+        self.root.geometry(f"400x500")
         self.root.title("Macroweb")
-        self.root.resizable(False, False)
 
         self.manager = Manager()
         self.macro = self.manager.dict({
@@ -525,19 +522,7 @@ class App:
             self.detectionProcess.join()
 
         gw.getWindowsWithTitle('Macroweb')[0].activate()
-
-    def make_window_always_on_top(self, root):
-        # Get the window ID
-        hwnd = ctypes.windll.user32.GetParent(root.winfo_id())
-
-        # Make the window always on top
-        ctypes.windll.user32.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0001 | 0x0002)
-
-        # Make the window not focusable
-        styles = ctypes.windll.user32.GetWindowLongPtrW(hwnd, -16)
-        styles &= ~0x80000000  # Remove WS_POPUP style
-        styles |= 0x10000000  # Add WS_EX_NOACTIVATE style
-        ctypes.windll.user32.SetWindowLongPtrW(hwnd, -16, styles)
+        keyboard.add_hotkey('F1', self.start_func)
 
     def create_obby_frame(self):
         self.obby = tk.LabelFrame(self.tab1, text="Obby", padx=10, pady=10)
