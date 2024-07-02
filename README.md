@@ -13,8 +13,8 @@ And that's all, now you can run Main.py whenever you want to run the Macro.
 
 - Automatic obby completion.
 - Automatic item and potions collection.
-- Discord webhook support
-- VIP Gamepass setting
-- Multiple keyboard layouts (QWERTY, AZERTY, more soon)
+- Discord webhook support.
+- VIP Gamepass setting.
+- Multiple keyboard layouts (QWERTY, AZERTY, more soon).
 
 Discord Server: https://discord.gg/pHBMbpeG
