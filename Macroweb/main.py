@@ -73,17 +73,13 @@ azerty_to_qwerty = {
 
 keyboard_controller = Controller()
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
 def play_keystrokes(file_path, azerty):
     try:
-        full_path = os.path.join(base_dir, file_path)
-        print(f"File not found: {full_path}")
-        print(f"Directory contents: {os.listdir(base_dir)}")
-        with open(full_path, 'r') as f:
+        with open(file_path, 'r') as f:
             lines = f.readlines()
     except FileNotFoundError:
-        print(f"File not found: {full_path}")
-        print(f"Directory contents: {os.listdir(base_dir)}")
+        print(f"File not found: {file_path}")
+        print("Try rerunning the Macro, if you incounter the issue again please repoti to the discord server")
         return
 
     for line in lines:
@@ -495,11 +491,12 @@ class App:
             print(self.settings['azerty'], self.isAzerty.get())
             print("starting")
 
-            """try:
+            try:
                 gw.getWindowsWithTitle('Roblox')[0].activate()
             except Exception:
                 self.settings['start'] = False
-                return"""
+                print("please open roblox")
+                return
 
             # Start the macro process
             self.macroProcess = mp.Process(target=macro_process, args=(self.macro, self.webhook, self.settings))
