@@ -77,6 +77,8 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 def play_keystrokes(file_path, azerty):
     try:
         full_path = os.path.join(base_dir, file_path)
+        print(f"File not found: {full_path}")
+        print(f"Directory contents: {os.listdir(base_dir)}")
         with open(full_path, 'r') as f:
             lines = f.readlines()
     except FileNotFoundError:
@@ -720,4 +722,5 @@ class App:
 
 
 if __name__ == "__main__":
+    print(os.getcwd())
     app = App()
