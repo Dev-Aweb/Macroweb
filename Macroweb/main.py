@@ -153,30 +153,6 @@ def obby(vip, azerty):
     else:
         play_keystrokes('Records/Obby.txt', azerty)
 
-def craft_coins(vip, azerty):
-    main_position(vip, azerty)
-    if vip:
-        play_keystrokes('Records/VipCraftGlidedCoins.txt', azerty)
-    else:
-        play_keystrokes('Records/CraftGlidedCoins.txt', azerty)
-    time.sleep(5)
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 324), int(pyautogui.size().height * 100 / 118))
-    time.sleep(0.25)
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 573), int(pyautogui.size().height * 100 / 250))
-    pyautogui.scroll(25)
-    pyautogui.scroll(25)
-    time.sleep(0.25)
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 166))
-    time.sleep(0.25)
-    for i in range(5):
-        autoit.mouse_click("left", int(pyautogui.size().width * 100 / 161), int(pyautogui.size().height * 100 / 250))
-        time.sleep(0.25)
-        autoit.mouse_click("left", int(pyautogui.size().width * 100 / 235), int(pyautogui.size().height * 100 / 156))
-        time.sleep(0.25)
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 561), int(pyautogui.size().height * 100 / 1687))
-    time.sleep(0.25)
-    play_keystrokes('Records/Reset.txt', azerty)
-
 def send_discord_embed(webhook_url, title, description, color, fields=None, image_url=None):
     embed = {
         "title": title.strip(),
