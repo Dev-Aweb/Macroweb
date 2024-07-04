@@ -231,99 +231,6 @@ def screenshot_inventory(webhook):
     # Clean up the local file
     os.remove(filename)
 
-def load_known_auras(file):
-    known_auras = {}
-    try:
-        with open(file, 'r') as f:
-            for line in f:
-                name, color, rarity = line.strip().split(',')
-                known_auras[name] = (int(color), int(rarity))
-    except FileNotFoundError:
-        # Initialize with some predefined known auras if the file doesn't exist
-        known_auras = {
-            "Powered": (16777215, 1000),
-            "Aquatic": (5015039, 5000),
-            "Nautilus": (5595647, 9999),
-            "Permaforst": (8257503, 7500),
-            "Stormal": (8947848, 6000),
-            "Exotic": (3721688, 8500),
-            "Comet": (12505855, 4500),
-            "Jade": (616503, 2000),
-            "Bounded": (2447103, 3000),
-            "Celestial": (9937663, 7000),
-            "Kyawthuite": (2627218, 1500),
-            "Arcane": (6986495, 3500),
-            "Magnetic: Reverse Polarity": (8324735, 4000),
-            "Undefined": (3158064, 10000),
-            "Astral": (7746247, 2500)
-        }
-    return known_auras
-
-known_auras = load_known_auras("known_auras.txt")
-
-COLOR_TOLERANCE = 5
-
-def color_distance(color1, color2):
-    return np.linalg.norm(np.array(color1) - np.array(color2))
-
-def detect_aura(webhook):
-    filename = 'screenshot_aura.png'
-    if pyautogui.pixel(int(pyautogui.size().width * 100 / 212), int(pyautogui.size().height * 100 / 3375)) == (0, 0, 0):
-        print("Aura cutscene detected")
-        time.sleep(1)
-        pixel_color = pyautogui.pixel(int(pyautogui.size().width / 2), int(pyautogui.size().height / 2))
-        decimal_color = pixel_color[0] * 256 * 256 + pixel_color[1] * 256 + pixel_color[2]
-        print(f"Color: {decimal_color}")
-
-        # Convert pixel color to tuple
-        pixel_color_tuple = (pixel_color[0], pixel_color[1], pixel_color[2])
-
-        # List to store the closest auras
-        closest_auras = []
-
-        # Detect closest aura colors
-        for aura_name, (aura_color, rarity) in known_auras.items():
-            aura_color_tuple = ((aura_color >> 16) & 255, (aura_color >> 8) & 255, aura_color & 255)
-            distance = color_distance(pixel_color_tuple, aura_color_tuple)
-            closest_auras.append((aura_name, distance, rarity))
-
-        # Sort by distance and get the top 3 closest auras
-        closest_auras.sort(key=lambda x: x[1])
-        top_auras = closest_auras[:3]
-
-        # Print the top 3 closest auras
-        for aura_name, distance, rarity in top_auras:
-            print(f"Possible Aura: {aura_name} (Distance: {distance}, Rarity: {rarity})")
-
-        # Check if the closest match is within the tolerance
-        if top_auras[0][1] <= COLOR_TOLERANCE:
-            #winsound.Beep(1000, 100)
-            print(f"Detected Aura: {top_auras[0][0]} (Distance: {top_auras[0][1]}, Rarity: {top_auras[0][2]})")
-            inv = pyautogui.screenshot(region=(0, 0, pyautogui.size().width, pyautogui.size().height))
-            inv.save(filename)
-
-            if webhook['auraImage']:
-                image_url, message_id = upload_image_to_discord(webhook['webhookUrl'], filename)
-            else:
-                image_url = None
-
-            title = "YOU ROLLED " + top_auras[0][0]
-            color = decimal_color
-
-            if top_auras[0][2] > webhook['pingMin']:
-                description = f"Rarity: {top_auras[0][2]}, <@{webhook['userId']}>"
-            else:
-                description = f"Rarity: {top_auras[0][2]}"
-
-            if top_auras[0][2] > webhook['sendMin']:
-                send_discord_embed(webhook['webhookUrl'], title, description, color, None, image_url)
-        else:
-            #winsound.Beep(500, 500)
-            print("No matching aura found within tolerance")
-            print(f"Closest guess: {top_auras[0][0]} (Distance: {top_auras[0][1]})")
-    else:
-        print("Searching")
-
 def macro_process(macro, webhook, settings):
     getting_ready(settings['gamepass'], settings['azerty'])
 
@@ -348,11 +255,6 @@ def macro_process(macro, webhook, settings):
                 screenshot_inventory(webhook)
                 lastInventory = time.time()
 
-def detection_check(webhook):
-    while True:
-        detect_aura(webhook)
-        time.sleep(0.5)
-
 class App:
     def __init__(self):
         # Window
@@ -373,15 +275,12 @@ class App:
             'userId': "",
             'screenshotInventory': 0,
             'inventoryEvery': 0,
-            'sendMin': 0,
-            'pingMin': 0,
-            'auraImage': 0,
         })
         self.settings = self.manager.dict({
             'start': False,
             'gamepass': 1,
             'azerty': 0,
-            'version': "0.1",
+            'version': "0.1.0",
         })
 
         # Notebook (Tabs)
@@ -452,11 +351,6 @@ class App:
                                                                                             int) else 0
             self.webhook['inventoryEvery'] = int(self.isInventory.get()) if isinstance(self.isInventory.get(),
                                                                                        int) else 0
-            self.webhook['sendMin'] = int(self.minAura.get()) if isinstance(self.minAura.get(), int) else 0
-            self.webhook['pingMin'] = int(self.pingMinAura.get()) if isinstance(self.pingMinAura.get(), int) else 0
-            self.webhook['auraImage'] = int(self.sendAuraImages.get()) if isinstance(self.sendAuraImages.get(),
-                                                                                     int) else 0
-
             # Settings values type checks
             self.settings['gamepass'] = int(self.isVip.get()) if isinstance(self.isVip.get(), int) else 1
             self.settings['azerty'] = int(self.isAzerty.get()) if isinstance(self.isAzerty.get(), int) else 0
@@ -479,9 +373,6 @@ class App:
             keyboard.add_hotkey('F3', self.end_func)
 
             # Start the detection process if the webhook is enabled
-            if bool(self.webhook['enableWebhook']):
-                self.detectionProcess = mp.Process(target=detection_check, args=(self.webhook,))
-                self.detectionProcess.start()
 
         except Exception as e:
             # Print an error message and stop the execution
@@ -493,12 +384,8 @@ class App:
         self.settings['start'] = False
         self.macroProcess.terminate()
         self.macroProcess.join()
-        if bool(self.webhook['enableWebhook']):
-            self.detectionProcess.terminate()
-            self.detectionProcess.join()
-
-        gw.getWindowsWithTitle('Macroweb')[0].activate()
         keyboard.add_hotkey('F1', self.start_func)
+        gw.getWindowsWithTitle('Macroweb')[0].activate()
 
     def create_obby_frame(self):
         self.obby = tk.LabelFrame(self.tab1, text="Obby", padx=10, pady=10)
@@ -562,21 +449,6 @@ class App:
         self.inventoryMinutesLabel = tk.Label(self.inventoryFrame, text="minutes")
         self.inventoryMinutesLabel.grid(row=0, column=2, sticky='w')
 
-        self.minAuraLabel = tk.Label(self.webhookframe, text="Send minimum Aura:")
-        self.minAuraLabel.grid(row=7, column=0, sticky='w')
-        self.minAura = tk.Entry(self.webhookframe, width=55)
-        self.minAura.grid(row=8, column=0, columnspan=3, sticky='w')
-
-        self.pingMinAuraLabel = tk.Label(self.webhookframe, text="Ping minimum aura:")
-        self.pingMinAuraLabel.grid(row=9, column=0, sticky='w')
-        self.pingMinAura = tk.Entry(self.webhookframe, width=55)
-        self.pingMinAura.grid(row=10, column=0, columnspan=3, sticky='w')
-
-        self.sendAuraImages = tk.IntVar()
-
-        self.doSendAuraImages = tk.Checkbutton(self.webhookframe, text="Send Aura Images", variable=self.sendAuraImages)
-        self.doSendAuraImages.grid(row=11, column=0, columnspan=3, sticky='w')
-
         self.toggle_webhook()
         self.toggle_inventory()
 
@@ -587,11 +459,6 @@ class App:
         self.useridLabel.config(state=state)
         self.userid.config(state=state)
         self.doInventory.config(state=state)
-        self.minAura.config(state=state)
-        self.pingMinAura.config(state=state)
-        self.minAuraLabel.config(state=state)
-        self.pingMinAuraLabel.config(state=state)
-        self.doSendAuraImages.config(state=state)
 
     def toggle_inventory(self):
         state = 'normal' if self.isInventory.get() == 1 else 'disabled'
