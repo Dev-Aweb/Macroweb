@@ -121,7 +121,7 @@ def getting_ready(vip, azerty):
         play_keystrokes('Records/Camera.txt', azerty)
 
 def main_position(vip, azerty):
-    if vip:
+    if bool(vip):
         play_keystrokes('Records/VipMainPosition.txt', azerty)
     else:
         play_keystrokes('Records/MainPosition.txt', azerty)
@@ -226,7 +226,7 @@ def screenshot_inventory(webhook):
     result = send_discord_embed(webhook_url, title, description, color, None, image_url)
     print(result)
 
-    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5052), int(pyautogui.size().height * 100 / 245))
+    autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5052), int(pyautogui.size().height * 100 / 225))
 
     # Clean up the local file
     os.remove(filename)
@@ -331,6 +331,8 @@ class App:
     def on_closing(self):
         if messagebox.askyesno(title="Quit?", message="Do you really want to quit?"):
             self.root.destroy()
+            self.macroProcess.terminate()
+            self.macroProcess.join()
             quit()
 
     def start_func(self):
@@ -382,10 +384,9 @@ class App:
     def end_func(self):
         if not self.settings['start']: return
         self.settings['start'] = False
+        keyboard.add_hotkey('F1', self.start_func)
         self.macroProcess.terminate()
         self.macroProcess.join()
-        keyboard.add_hotkey('F1', self.start_func)
-        gw.getWindowsWithTitle('Macroweb')[0].activate()
 
     def create_obby_frame(self):
         self.obby = tk.LabelFrame(self.tab1, text="Obby", padx=10, pady=10)
