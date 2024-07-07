@@ -192,8 +192,10 @@ def upload_image_to_discord(webhook_url, file_path):
         raise Exception(f"Failed to upload image. Status code: {response.status_code}, Response: {response.text}")
 
 def screenshot_inventory(webhook):
+    time.sleep(0.5)
     filename = 'screenshot.png'
     autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5052), int(pyautogui.size().height * 100 / 308))
+    time.sleep(0.2)
 
     inv = pyautogui.screenshot(region=(0, 0, pyautogui.size().width, pyautogui.size().height))
     inv.save(filename)
@@ -210,9 +212,11 @@ def screenshot_inventory(webhook):
     print(result)
 
     os.remove(filename)
+    time.sleep(0.2)
 
     autoit.mouse_click("left", int(pyautogui.size().width * 100 / 5052), int(pyautogui.size().height * 100 / 225))
     autoit.mouse_click("left", int(pyautogui.size().width * 100 / 151), int(pyautogui.size().height * 100 / 363))
+    time.sleep(0.2)
 
     inv = pyautogui.screenshot(region=(0, 0, pyautogui.size().width, pyautogui.size().height))
     inv.save(filename)
