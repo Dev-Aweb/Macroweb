@@ -18,7 +18,8 @@ dependencies = [
     'multiprocessing',  # Multiprocessing is part of the standard library, so this line can be omitted.
     'ctypes',  # ctypes is part of the standard library, so this line can be omitted.
     'webbrowser',  # webbrowser is part of the standard library, so this line can be omitted.
-    'configparser',  # configparser is part of the standard library, so this line can be omitted.
+    'configparser',
+    'opencv-python',
 ]
 
 if __name__ == "__main__":
