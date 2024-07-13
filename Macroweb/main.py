@@ -404,7 +404,7 @@ def macro_process(macro, webhook, settings):
                 lastScbr = time.time()
 
         if bool(macro['doCraft']):
-            if time.time() - lastCraft > int(webhook['craftEvery']) * 60:
+            if time.time() - lastCraft > int(macro['craftEvery']) * 60:
                 craft_potions(settings['gamepass'], settings['azerty'], macro)
                 lastCraft = time.time()
 
